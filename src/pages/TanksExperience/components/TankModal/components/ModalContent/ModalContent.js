@@ -13,7 +13,7 @@ export const tankOptions = [
 
 export function createModalContent(store) {
   const tankName = h('h1', {}, 'NAME');
-  const header = h('header', {}, tankName);
+  const header = h('header', { class: styles.header }, tankName);
 
   const playModeTitle = h('h4', {}, 'Комплектация');
 
