@@ -1,4 +1,5 @@
 import { TankCard } from '@/pages/TanksExperience/components/TankCard/TankCard';
+import { TankModal } from '@/pages/TanksExperience/components/TankModal/TankModal';
 import { pageDesc } from '@/pages/TanksExperience/pageDesc';
 import { h } from '@/shared/utils/h';
 
@@ -21,5 +22,7 @@ export const TanksExperience = () => {
     ),
   );
 
-  return h('div', { class: styles.container }, [descText, cardsContainer]);
+  const modal = TankModal(tankStore);
+
+  return h('div', { class: styles.container }, [descText, cardsContainer, modal]);
 };
