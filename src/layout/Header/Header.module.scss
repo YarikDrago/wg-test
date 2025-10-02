@@ -1,8 +1,24 @@
 .header {
-  position: relative;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-wrap: wrap;
   width: 100%;
-  background-color: darkred;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  background-color: #141414;
+
+  .logoLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    width: clamp(150px, 15vw, 300px);
+    svg{
+      fill: #fff;
+      transition: fill 0.3s ease-in-out;
+    }
+    :hover{
+      fill: red;
+    }
+  }
 }
