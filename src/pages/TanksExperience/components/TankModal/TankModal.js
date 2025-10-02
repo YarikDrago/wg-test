@@ -1,5 +1,6 @@
 import { autorun } from 'mobx';
 
+import { getDeviceType } from '@/pages/TanksExperience/components/TankModal/utils/getDeviceType';
 import { h } from '@/shared/utils/h';
 
 import styles from './TankModal.module.scss';
@@ -14,7 +15,6 @@ import {
 } from './handlers';
 import { closeModal } from './utils/closeModal';
 import { openModal } from './utils/openModal';
-import { getDeviceType } from '@/pages/TanksExperience/components/TankModal/utils/getDeviceType';
 
 export const TankModal = (tankStore) => {
   const { hasPointer, isMobile } = getDeviceType();
