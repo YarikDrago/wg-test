@@ -1,3 +1,4 @@
+import wofImage from '@/assets/images/wot.jpg';
 import { TankCard } from '@/pages/TanksExperience/components/TankCard/TankCard';
 import { TankModal } from '@/pages/TanksExperience/components/TankModal/TankModal';
 import { pageDesc } from '@/pages/TanksExperience/pageDesc';
@@ -8,6 +9,8 @@ import { tankStore } from './store';
 
 export const TanksExperience = () => {
   const descText = h('p', { class: styles.desc }, pageDesc);
+  const headerImg = h('img', { src: wofImage, alt: 'wof' });
+  const header = h('header', {}, [headerImg]);
 
   const cardsContainer = h(
     'div',
@@ -22,7 +25,9 @@ export const TanksExperience = () => {
     ),
   );
 
+  const mainContent = h('div', { class: styles.mainContent }, [descText, cardsContainer]);
+
   const modal = TankModal(tankStore);
 
-  return h('div', { class: styles.container }, [descText, cardsContainer, modal]);
+  return h('div', { class: styles.root }, [header, mainContent, modal]);
 };
