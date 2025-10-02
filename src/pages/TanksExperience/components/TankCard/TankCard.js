@@ -6,8 +6,10 @@ export function TankCard({ id, name, img, tankStore }) {
   const hasPointer = window.matchMedia('(pointer: fine)').matches;
   const isMobile = window.matchMedia('(max-width: 900px)').matches;
 
+  const imagePath = new URL(`/src/assets/images/tanks/${img}`, import.meta.url).href;
+
   const card = h('div', { class: styles.tankCard, 'data-tank-id': id }, [
-    h('img', { src: `/src/assets/images/tanks/${img}`, alt: name }),
+    h('img', { src: imagePath, alt: name }),
     h('div', { class: 'tank-name' }, name),
   ]);
 
