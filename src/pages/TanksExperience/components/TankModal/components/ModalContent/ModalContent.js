@@ -106,7 +106,27 @@ export function createModalContent(store) {
     value: '0',
   });
 
+  function inputCorrectValue(e) {
+    const value = parseInt(e.target.value, 10);
+
+    if (value < 0) {
+      e.target.value = 0;
+    } else if (value > 300) {
+      e.target.value = 300;
+    } else if (isNaN(value)) {
+      e.target.value = 0;
+    }
+  }
+
   numberInput.addEventListener('input', (e) => {
+    inputCorrectValue(e);
+
+    store.setDaysValue(e.target.value);
+  });
+
+  /* Additional check of the value on blur */
+  numberInput.addEventListener('blur', (e) => {
+    inputCorrectValue(e);
     store.setDaysValue(e.target.value);
   });
 
