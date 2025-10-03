@@ -89,6 +89,51 @@ export function createModalContent(store) {
   const titleExp = h('h4', {}, 'Опыт танка');
   const resultIndicator = h('p', { class: styles.result }, '0');
 
+  /* For animation */
+  let currentValue = 0;
+  let targetValue = 0;
+  let animationFrame = null;
+  let previousTankId = null;
+
+  /*Function for animation of number indicator */
+  function animateValue(start, end, duration = 500) {
+    if (animationFrame) {
+      cancelAnimationFrame(animationFrame);
+    }
+
+    const startTime = performance.now();
+    const diff = end - start;
+
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      /* Progress of the animation (0-1)
+       Limit progress to 1 to avoid overflow.
+      * */
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function (ease-out)
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+
+      /* Animation display value.
+       Always show positive value.*/
+      const current = Math.abs(Math.round(start + diff * easeOut));
+
+      resultIndicator.textContent = current.toString();
+
+      resultIndicator.classList.add(styles.updating);
+
+      /* If animation is not finished, request next frame */
+      if (progress !== 1) {
+        animationFrame = requestAnimationFrame(animate);
+      } else {
+        resultIndicator.classList.remove(styles.updating);
+        currentValue = end;
+      }
+    }
+
+    animationFrame = requestAnimationFrame(animate);
+  }
+
   const resultLine = () => {
     const star = h('img', { class: styles.star, src: starIcon, alt: 'star' });
     return h('div', { class: styles.resultLine }, [star, resultIndicator]);
@@ -145,6 +190,16 @@ export function createModalContent(store) {
 
     if (!activeTank) return;
 
+    /* For number animation */
+    if (previousTankId !== activeTank.id) {
+      previousTankId = activeTank.id;
+      currentValue = 0; // Reset value with change of tank
+      resultIndicator.textContent = '0';
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    }
+
     /* Update tank name */
     tankName.textContent = activeTank.name;
 
@@ -169,8 +224,11 @@ export function createModalContent(store) {
       }
     });
 
-    /* Update result indicator (rounded to nearest integer) */
-    resultIndicator.textContent = `${Math.round(calculatedExp)}`;
+    /* Update result indicator with animation */
+    targetValue = Math.round(calculatedExp);
+    if (currentValue !== targetValue) {
+      animateValue(currentValue, targetValue);
+    }
   }
 
   autorun(() => {

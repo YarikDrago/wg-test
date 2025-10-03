@@ -215,11 +215,20 @@
           height: 66px;
         }
 
-        p {
+        .result {
           margin: 0;
           font-family: Arial, sans-serif;
           font-size: 56px;
           font-weight: bold;
+          transition: transform 0.15s ease;
+          display: inline-block;
+
+          &.updating {
+            transform: scale(1.1);
+            color: #ffc062;
+            text-shadow: 0 0 8px #F8AA31, 0 0 16px #F8AA31, 0 0 24px #F8AA31;
+          }
+
         }
       }
     }
@@ -383,7 +392,7 @@
             height: 46px;
           }
 
-          p {
+          .result {
             font-size: 40px;
           }
         }
