@@ -1,0 +1,21 @@
+.indicator {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: 56px;
+  font-weight: bold;
+  transition: transform 0.15s ease;
+  display: inline-block;
+
+  @media screen and (max-width: 900px) {
+    font-size: 40px;
+  }
+}
+
+.updating {
+  transform: scale(1.1);
+  color: #ffc062;
+  text-shadow:
+          0 0 8px #f8aa31,
+          0 0 16px #f8aa31,
+          0 0 24px #f8aa31;
+}

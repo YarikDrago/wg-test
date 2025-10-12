@@ -1,5 +1,6 @@
 import { autorun } from 'mobx';
 
+import { AnimatedNumber } from '@/shared/ui/AnimatedNumbers/AnimatedNumber';
 import { h } from '@/shared/utils/h';
 
 import starIcon from '../../../../../../assets/images/Star 1.png';
@@ -87,56 +88,11 @@ export function createModalContent(store) {
   ]);
 
   const titleExp = h('h4', {}, 'Опыт танка');
-  const resultIndicator = h('p', { class: styles.result }, '0');
-
-  /* For animation */
-  let currentValue = 0;
-  let targetValue = 0;
-  let animationFrame = null;
-  let previousTankId = null;
-
-  /*Function for animation of number indicator */
-  function animateValue(start, end, duration = 500) {
-    if (animationFrame) {
-      cancelAnimationFrame(animationFrame);
-    }
-
-    const startTime = performance.now();
-    const diff = end - start;
-
-    function animate(currentTime) {
-      const elapsed = currentTime - startTime;
-      /* Progress of the animation (0-1)
-       Limit progress to 1 to avoid overflow.
-      * */
-      const progress = Math.min(elapsed / duration, 1);
-
-      // Easing function (ease-out)
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-
-      /* Animation display value.
-       Always show positive value.*/
-      const current = Math.abs(Math.round(start + diff * easeOut));
-
-      resultIndicator.textContent = current.toString();
-
-      resultIndicator.classList.add(styles.updating);
-
-      /* If animation is not finished, request next frame */
-      if (progress !== 1) {
-        animationFrame = requestAnimationFrame(animate);
-      } else {
-        resultIndicator.classList.remove(styles.updating);
-        currentValue = end;
-      }
-    }
-
-    animationFrame = requestAnimationFrame(animate);
-  }
+  const resultIndicator = new AnimatedNumber({ value: '0', class: 'indicator' });
 
   const resultLine = () => {
     const star = h('img', { class: styles.star, src: starIcon, alt: 'star' });
-    return h('div', { class: styles.resultLine }, [star, resultIndicator]);
+    return h('div', { class: styles.resultLine }, [star, resultIndicator.element]);
   };
 
   const expBlock = h('div', { class: styles.expBlock }, [titleExp, resultLine()]);
@@ -186,19 +142,8 @@ export function createModalContent(store) {
     const activeTank = store.activeTank;
     const daysValue = store.daysValue;
     const coefMode = store.coefMode;
-    const calculatedExp = store.calculatedExp;
 
     if (!activeTank) return;
-
-    /* For number animation */
-    if (previousTankId !== activeTank.id) {
-      previousTankId = activeTank.id;
-      currentValue = 0; // Reset value with change of tank
-      resultIndicator.textContent = '0';
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-      }
-    }
 
     /* Update tank name */
     tankName.textContent = activeTank.name;
@@ -225,10 +170,7 @@ export function createModalContent(store) {
     });
 
     /* Update result indicator with animation */
-    targetValue = Math.round(calculatedExp);
-    if (currentValue !== targetValue) {
-      animateValue(currentValue, targetValue);
-    }
+    resultIndicator.setValue(Math.round(store.calculatedExp));
   }
 
   autorun(() => {
