@@ -1,8 +1,8 @@
 import { autorun } from 'mobx';
 
-import { RadioGroup } from '@/pages/TanksExperience/components/TankModal/components/ModalContent/components/RadioGroup';
 import { PLAY_MODE_OPTIONS } from '@/pages/TanksExperience/store';
 import { AnimatedNumber } from '@/shared/ui/AnimatedNumbers/AnimatedNumber';
+import { RadioGroup } from '@/shared/ui/RadioGroup/RadioGroup';
 import { h } from '@/shared/utils/h';
 
 import starIcon from '../../../../../../assets/images/Star 1.png';
