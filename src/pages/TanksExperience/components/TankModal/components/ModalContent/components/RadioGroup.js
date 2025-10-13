@@ -1,41 +1,53 @@
-import { PLAY_MODE_OPTIONS, tankStore } from '@/pages/TanksExperience/store';
-import { h } from '@/shared/utils/h';
+import './RadioGroup.scss';
 
-import styles from './RadioGroup.module.scss';
+export class RadioGroup {
+  #container;
+  #radioInputs = [];
+  #onChange;
 
-export const RadioGroup = () => {
-  const radioInputs = [];
+  constructor({ options, name, onChange }) {
+    this.#onChange = onChange;
+    this.#container = document.createElement('div');
+    this.#container.classList.add('radio-group-container');
 
-  const container = h(
-    'div',
-    { class: styles.playModeSelector },
-    PLAY_MODE_OPTIONS.map((opt, index) => {
-      const radio = h('input', {
-        type: 'radio',
-        name,
-        value: opt.value,
-      });
+    options.forEach((opt, index) => {
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = name | 'radio-group';
+      radio.value = opt.value;
 
-      /* Always check the first radio button */
       if (index === 0) {
         radio.checked = true;
       }
 
       radio.addEventListener('change', (e) => {
         if (e.target.checked) {
-          tankStore.setCoefMode(e.target.value);
+          this.#onChange(e.target.value);
         }
       });
 
-      radioInputs.push(radio);
+      this.#radioInputs.push(radio);
 
-      return h('label', { class: styles.radioLabel }, [
-        radio,
-        h('span', { class: styles.custom }),
-        ` ${opt.label}`,
-      ]);
-    }),
-  );
+      const span = document.createElement('span');
 
-  return { container, radioInputs };
-};
+      const label = document.createElement('label');
+      label.append(radio);
+      label.append(span);
+      label.append(opt.label);
+
+      this.#container.append(label);
+    });
+  }
+
+  get container() {
+    return this.#container;
+  }
+
+  get radioInputs() {
+    return this.#radioInputs;
+  }
+
+  change(value) {
+    this.#radioInputs.forEach((radio) => (radio.checked = radio.value == value));
+  }
+}

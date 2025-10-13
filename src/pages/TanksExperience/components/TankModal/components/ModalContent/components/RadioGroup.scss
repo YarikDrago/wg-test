@@ -1,4 +1,4 @@
-.playModeSelector {
+.radio-group-container {
   color: #ADADAD;
   display: flex;
   flex-direction: column;
@@ -22,17 +22,17 @@
       pointer-events: none;
     }
 
-    .custom {
+    span {
+      position: relative;
+      display: inline-block;
       width: 18px;
       height: 18px;
-      background: #dddddd;
       border-radius: 50%;
-      display: inline-block;
-      position: relative;
+      background: #dddddd;
       transition: border-color 0.2s;
     }
 
-    input:checked + .custom::after {
+    input:checked + span::after {
       content: "";
       position: absolute;
       top: 4px;
@@ -46,7 +46,7 @@
 }
 
 @media screen and (max-width: 900px) {
-  .playModeSelector {
+  .radio-group-container {
     justify-content: center;
     flex-direction: row;
     width: fit-content;
@@ -59,12 +59,12 @@
       gap: 12px;
       font-size: 12px;
 
-      .custom {
+      span {
         width: 24px;
         height: 24px;
       }
 
-      input:checked + .custom::after {
+      input:checked + span::after {
         content: "";
         position: absolute;
         top: 6px;

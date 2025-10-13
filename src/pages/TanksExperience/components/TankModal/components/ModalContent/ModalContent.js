@@ -1,6 +1,7 @@
 import { autorun } from 'mobx';
 
 import { RadioGroup } from '@/pages/TanksExperience/components/TankModal/components/ModalContent/components/RadioGroup';
+import { PLAY_MODE_OPTIONS } from '@/pages/TanksExperience/store';
 import { AnimatedNumber } from '@/shared/ui/AnimatedNumbers/AnimatedNumber';
 import { h } from '@/shared/utils/h';
 
@@ -11,10 +12,16 @@ export function createModalContent(store) {
   const tankName = h('h1', {}, 'NAME');
   const header = h('header', { class: styles.header }, tankName);
   const playModeTitle = h('h4', {}, 'Комплектация');
-  const { container: playModeSelector, radioInputs } = RadioGroup();
+  const playModeSelector = new RadioGroup({
+    options: PLAY_MODE_OPTIONS,
+    name: 'tankType',
+    onChange: (value) => {
+      store.setCoefMode(value);
+    },
+  });
   const playModeSelectorBlock = h('div', { class: styles.playModeBlock }, [
     playModeTitle,
-    playModeSelector,
+    playModeSelector.container,
   ]);
   const titleSlider = h('h4', {}, 'Количество боёв');
   /* Range slider */
@@ -114,13 +121,7 @@ export function createModalContent(store) {
     const val = ((daysValue - range.min) / (range.max - range.min)) * 100;
     range.style.setProperty('--val', `${val}%`);
 
-    /* Update radio buttons state (checked/unchecked) */
-    radioInputs.forEach((radio) => {
-      const shouldBeChecked = Number(radio.value) === coefMode;
-      if (radio.checked !== shouldBeChecked) {
-        radio.checked = shouldBeChecked;
-      }
-    });
+    playModeSelector.change(coefMode);
 
     /* Update result indicator with animation */
     resultIndicator.setValue(Math.round(store.calculatedExp));
