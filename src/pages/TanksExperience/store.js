@@ -2,6 +2,12 @@ import { makeAutoObservable } from 'mobx';
 
 import { tanksData } from './tanksData';
 
+export const PLAY_MODE_OPTIONS = [
+  { value: 1, label: 'Стандартная' },
+  { value: 1.1, label: 'Элитная' },
+  { value: 1.2, label: 'Премиум' },
+];
+
 class TankStore {
   activeTankId = null;
   tanks = [];

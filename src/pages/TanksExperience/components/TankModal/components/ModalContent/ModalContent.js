@@ -1,69 +1,22 @@
 import { autorun } from 'mobx';
 
+import { RadioGroup } from '@/pages/TanksExperience/components/TankModal/components/ModalContent/components/RadioGroup';
 import { AnimatedNumber } from '@/shared/ui/AnimatedNumbers/AnimatedNumber';
 import { h } from '@/shared/utils/h';
 
 import starIcon from '../../../../../../assets/images/Star 1.png';
 import styles from './ModalContent.module.scss';
 
-export const tankOptions = [
-  { value: 1, label: 'Стандартная' },
-  { value: 1.1, label: 'Элитная' },
-  { value: 1.2, label: 'Премиум' },
-];
-
 export function createModalContent(store) {
   const tankName = h('h1', {}, 'NAME');
   const header = h('header', { class: styles.header }, tankName);
-
   const playModeTitle = h('h4', {}, 'Комплектация');
-
-  const PlayModeSelector = (name = 'tankType') => {
-    const radioInputs = [];
-
-    const container = h(
-      'div',
-      { class: styles.playModeSelector },
-      tankOptions.map((opt, index) => {
-        const radio = h('input', {
-          type: 'radio',
-          name,
-          value: opt.value,
-        });
-
-        // Устанавливаем первый элемент выбранным по умолчанию
-        if (index === 0) {
-          radio.checked = true;
-        }
-
-        // Добавляем обработчик изменения
-        radio.addEventListener('change', (e) => {
-          if (e.target.checked) {
-            store.setCoefMode(e.target.value);
-          }
-        });
-
-        radioInputs.push(radio);
-
-        return h('label', { class: styles.radioLabel }, [
-          radio,
-          h('span', { class: styles.custom }),
-          ` ${opt.label}`,
-        ]);
-      }),
-    );
-
-    return { container, radioInputs };
-  };
-
-  const { container: playModeSelector, radioInputs } = PlayModeSelector();
+  const { container: playModeSelector, radioInputs } = RadioGroup();
   const playModeSelectorBlock = h('div', { class: styles.playModeBlock }, [
     playModeTitle,
     playModeSelector,
   ]);
-
   const titleSlider = h('h4', {}, 'Количество боёв');
-
   /* Range slider */
   const range = h('input', {
     class: styles.slider,
