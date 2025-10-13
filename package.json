@@ -4,7 +4,7 @@
   "description": "tank carousel",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3000 --open --host",
     "build": "vite build",
     "preview": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1",
