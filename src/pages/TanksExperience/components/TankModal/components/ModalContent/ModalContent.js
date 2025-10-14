@@ -3,6 +3,7 @@ import { autorun } from 'mobx';
 import { PLAY_MODE_OPTIONS } from '@/pages/TanksExperience/store';
 import { AnimatedNumber } from '@/shared/ui/AnimatedNumbers/AnimatedNumber';
 import { RadioGroup } from '@/shared/ui/RadioGroup/RadioGroup';
+import { Slider } from '@/shared/ui/Slider/Slider';
 import { h } from '@/shared/utils/h';
 
 import starIcon from '../../../../../../assets/images/Star 1.png';
@@ -23,29 +24,21 @@ export function createModalContent(store) {
     playModeTitle,
     playModeSelector.container,
   ]);
-  const titleSlider = h('h4', {}, 'Количество боёв');
-  /* Range slider */
-  const range = h('input', {
-    class: styles.slider,
-    type: 'range',
+
+  const slider = new Slider({
     min: '0',
     max: '300',
     step: '1',
     value: '0',
+    onChange: (value) => {
+      store.setDaysValue(value);
+    },
   });
+  const sliderWrapper = h('div', { class: styles.sliderWrapper }, slider.element);
 
-  range.addEventListener('input', (e) => {
-    store.setDaysValue(e.target.value);
-  });
+  const titleSlider = h('h4', {}, 'Количество боёв');
 
-  const sliderWrapper = h('div', { class: styles.sliderWrapper }, [
-    h('div', { class: styles.sliderBackground }, [range]),
-  ]);
-
-  const sliderBlock = h('div', { class: styles.sliderBlock }, [
-    titleSlider,
-    h('div', { class: styles.slider }, sliderWrapper),
-  ]);
+  const sliderBlock = h('div', { class: styles.sliderBlock }, [titleSlider, sliderWrapper]);
 
   const titleExp = h('h4', {}, 'Опыт танка');
   const resultIndicator = new AnimatedNumber({ value: '0', class: 'indicator' });
@@ -93,7 +86,11 @@ export function createModalContent(store) {
 
   const inputBlock = h('div', { class: styles.inputBlock }, [numberInput]);
 
-  const leftSide = h('div', { class: styles.leftSide }, [playModeSelectorBlock, sliderBlock]);
+  const leftSide = h('div', { class: styles.leftSide }, [
+    playModeSelectorBlock,
+    sliderBlock,
+    sliderWrapper,
+  ]);
   const rightSide = h('div', { class: styles.rightSide }, [expBlock, inputBlock]);
 
   const content = h('div', { class: styles.modalContent }, [header, leftSide, rightSide]);
@@ -113,14 +110,7 @@ export function createModalContent(store) {
       numberInput.value = daysValue;
     }
 
-    if (range.value !== String(daysValue)) {
-      range.value = daysValue;
-    }
-
-    /* Update slider progress background */
-    const val = ((daysValue - range.min) / (range.max - range.min)) * 100;
-    range.style.setProperty('--val', `${val}%`);
-
+    slider.changeValue(daysValue);
     playModeSelector.change(coefMode);
 
     /* Update result indicator with animation */
